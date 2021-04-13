@@ -3,6 +3,7 @@ import { Vector2 } from "./Vector2";
 import ball_8 from "url:./assets/ball_8.png";
 import ball_16 from "url:./assets/ball_16.png";
 import table from "url:./assets/table.png";
+
 import { circleRect, lineCircle, pointOfLinesIntersection } from "./collisions";
 
 const canvas = document.createElement("canvas");
@@ -490,6 +491,8 @@ document.addEventListener("mousedown", (e) => {
 });
 
 document.addEventListener("touchstart", (e) => {
+  e.preventDefault();
+
   mouse.pressed = true;
   mouse.x1 = e.touches[0].pageX;
   mouse.y1 = e.touches[0].pageY;
@@ -522,6 +525,8 @@ document.addEventListener("mousemove", (e) => {
 });
 
 document.addEventListener("touchmove", (e) => {
+  e.preventDefault();
+
   mouse.x2 = e.touches[0].pageX;
   mouse.y2 = e.touches[0].pageY;
 });
