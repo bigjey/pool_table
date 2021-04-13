@@ -24,6 +24,9 @@ canvas.height = H;
 
 document.body.appendChild(canvas);
 
+canvas.style.width = `515px`;
+canvas.style.height = `295px`;
+
 if (!ctx) {
   throw new Error("can't init 2d renderer");
 }
@@ -273,16 +276,18 @@ const render = () => {
 
   // scope
   if (mouse.pressed) {
-    // console.log(mouse);
-    ctx.strokeStyle = "#fff";
-    ctx.beginPath();
-    ctx.moveTo(whiteBall.position.x, whiteBall.position.y);
-    ctx.lineTo(
-      whiteBall.position.x + (mouse.x1 - mouse.x2),
-      whiteBall.position.y + (mouse.y1 - mouse.y2)
-    );
-    ctx.closePath();
-    ctx.stroke();
+    const direction = new Vector2(mouse.x1 - mouse.x2, mouse.y1 - mouse.y2);
+    if (direction.magnitude() > 50) {
+      ctx.strokeStyle = "#fff";
+      ctx.beginPath();
+      ctx.moveTo(whiteBall.position.x, whiteBall.position.y);
+      ctx.lineTo(
+        whiteBall.position.x + (mouse.x1 - mouse.x2),
+        whiteBall.position.y + (mouse.y1 - mouse.y2)
+      );
+      ctx.closePath();
+      ctx.stroke();
+    }
   }
 };
 
@@ -474,6 +479,7 @@ let mouse = {
   x2: 0,
   y2: 0,
 };
+
 document.addEventListener("mousedown", (e) => {
   mouse.pressed = true;
   mouse.x1 = e.pageX;
@@ -482,6 +488,16 @@ document.addEventListener("mousedown", (e) => {
   mouse.x2 = e.pageX;
   mouse.y2 = e.pageY;
 });
+
+document.addEventListener("touchstart", (e) => {
+  mouse.pressed = true;
+  mouse.x1 = e.touches[0].pageX;
+  mouse.y1 = e.touches[0].pageY;
+
+  mouse.x2 = e.touches[0].pageX;
+  mouse.y2 = e.touches[0].pageY;
+});
+
 document.addEventListener("mouseup", () => {
   mouse.pressed = false;
 
@@ -489,7 +505,23 @@ document.addEventListener("mouseup", () => {
   whiteBall.velocity = direction;
   // console.log(direction, direction.magnitude());
 });
+
+document.addEventListener("touchend", () => {
+  mouse.pressed = false;
+
+  const direction = new Vector2(mouse.x1 - mouse.x2, mouse.y1 - mouse.y2);
+  if (direction.magnitude() > 50) {
+    whiteBall.velocity = direction;
+  }
+  // console.log(direction, direction.magnitude());
+});
+
 document.addEventListener("mousemove", (e) => {
   mouse.x2 = e.pageX;
   mouse.y2 = e.pageY;
+});
+
+document.addEventListener("touchmove", (e) => {
+  mouse.x2 = e.touches[0].pageX;
+  mouse.y2 = e.touches[0].pageY;
 });
